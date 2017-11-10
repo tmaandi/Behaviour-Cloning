@@ -8,7 +8,9 @@ import cv2
 from generator import generator
 # from generator_si import generator
 from sklearn.model_selection import train_test_split
+import matplotlib
 from matplotlib import pyplot as plt
+plt.switch_backend('agg')
 from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 # Loading and initializing Data
@@ -81,16 +83,29 @@ model.add(Cropping2D(cropping=((50,20),(0,0)), input_shape=(160,320,3)))
 # new image shape = (3,110,320)
 # Normalization layer
 model.add(Lambda(lambda x: (x/255.0) - 0.5))
-model.add(Convolution2D(32,3,3))
-model.add(MaxPooling2D((2,2)))
-model.add(Activation('relu'))
+
+# NVIDIA-like Architecture
+model.add(Convolution2D(24,5,2,activation='relu', subsample=(2,2)))
+model.add(Convolution2D(36,5,2,activation='relu', subsample=(2,2)))
+model.add(Convolution2D(48,5,2,activation='relu', subsample=(2,2)))
+model.add(Convolution2D(64,3,1,activation='relu', subsample=(2,2)))
+model.add(Convolution2D(64,3,1,activation='relu', subsample=(2,2)))
 model.add(Flatten())
+model.add(Dense(100))
+model.add(Dense(50))
+model.add(Dense(10))
 model.add(Dense(1))
+
+# model.add(Convolution2D(32,3,3))
+# model.add(MaxPooling2D((2,2)))
+# model.add(Activation('relu'))
+# model.add(Flatten())
+# model.add(Dense(1))
 
 model.compile(loss='mse', optimizer='adam')
 
 history_object = model.fit_generator(train_generator, samples_per_epoch= \
-	len(train_samples), validation_data=validation_generator, \
+	2*len(train_samples), validation_data=validation_generator, \
 	nb_val_samples=len(validation_samples), nb_epoch= epochs, verbose=1)
 
 # Visualizing loss
@@ -99,14 +114,17 @@ history_object = model.fit_generator(train_generator, samples_per_epoch= \
 print(history_object.history.keys())
 
 # plot the training and validation loss for each epoch
+fig = plt.figure()
 plt.plot(history_object.history['loss'])
 plt.plot(history_object.history['val_loss'])
 plt.title('model mean squared error loss')
 plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set','validation set'],loc = 'upper right')
-plt.show()
+#plt.show()
 
+print("Saving figure")
+fig.savefig('Loss_and_Validation.png')
 print('Saving Model.h5\n')
 model.save('model.h5')
 print('Model.h5 saved\n')
