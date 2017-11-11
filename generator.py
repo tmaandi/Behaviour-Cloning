@@ -1,5 +1,5 @@
 import sklearn
-import cv2
+import matplotlib.image as mpimg
 import numpy as np
 
 def generator(samples, batch_size=32, path = './example_data/IMG/'):
@@ -13,12 +13,27 @@ def generator(samples, batch_size=32, path = './example_data/IMG/'):
 			angles = []
 			for batch_sample in batch_samples:
 				name = path + batch_sample[0].split('/')[-1]
-				center_image = cv2.imread(name)
+				center_image = mpimg.imread(name)
 				center_angle = float(batch_sample[3])
 				images.append(center_image)
 				angles.append(center_angle)
 				
-				# flipping and appending
+				# appending images from left and right cameras
+				correction = 0.15
+				left_angle = center_angle + correction
+				right_angle = center_angle - correction
+
+				name = path + batch_sample[1].split('/')[-1]
+				left_image = mpimg.imread(name)
+				images.append(left_image)
+				angles.append(left_angle)
+
+				name = path + batch_sample[2].split('/')[-1]
+				right_image = mpimg.imread(name)
+				images.append(right_image)
+				angles.append(right_angle)
+
+				# flipping and appending center images
 				center_image_flipped = np.fliplr(center_image)
 				center_angle_flipped = -center_angle
 				images.append(center_image_flipped)

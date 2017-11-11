@@ -1,7 +1,7 @@
 *.swp
 *.zip
-*.h5
 example_data/
 __MACOSX/
 __pycache__/
 linux_sim/
+video_result/

@@ -72,7 +72,7 @@ validation_generator = generator(validation_samples, batch_size =32, path = img_
 
 # Keras NN Model
 # Number of epochs
-epochs = 5
+epochs = 4
 
 model = Sequential()
 
@@ -92,6 +92,7 @@ model.add(Convolution2D(64,3,1,activation='relu', subsample=(2,2)))
 model.add(Convolution2D(64,3,1,activation='relu', subsample=(2,2)))
 model.add(Flatten())
 model.add(Dense(100))
+model.add(Dropout(0.40))
 model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
@@ -105,7 +106,7 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
 
 history_object = model.fit_generator(train_generator, samples_per_epoch= \
-	2*len(train_samples), validation_data=validation_generator, \
+	4*len(train_samples), validation_data=validation_generator, \
 	nb_val_samples=len(validation_samples), nb_epoch= epochs, verbose=1)
 
 # Visualizing loss
