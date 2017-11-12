@@ -19,6 +19,9 @@ def generator(samples, batch_size=32, path = './example_data/IMG/'):
 				angles.append(center_angle)
 				
 				# appending images from left and right cameras
+				# steering angle 'corrected' for what the car
+				# would do if it pointed in the direction of 
+				# 'left camera' or 'right camera' image
 				correction = 0.15
 				left_angle = center_angle + correction
 				right_angle = center_angle - correction
