@@ -39,6 +39,7 @@ Below is the image which shows how the model was 'overfitting' and was tackled b
 
 [overfitting]: ./examples/Loss_and_Validation_overfitting.png "Network Overfitting during training"
 ![alt text][overfitting]
+
 [not_overfitting]: ./examples/Loss_and_Validation.png "Network Performance with fewer epochs and Dropout layer"
 ![alt text][not_overfitting]
 
